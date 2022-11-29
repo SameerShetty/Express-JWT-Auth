@@ -11,6 +11,7 @@ app.use(BodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use("/login", require("./routes/userRoutes"));
+app.use("/dboard", require("./routes/userRoutes"));
 
 mongoose.connect(process.env.MONGO_URL);
 
