@@ -2,22 +2,22 @@ const bcrypt = require("bcryptjs");
 const JWT = require("jsonwebtoken");
 const User = require("../model/userModel");
 
-const registerUser = async (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    res.status(400).json({ message: "Invalid credentials" });
-  }
-  const salt = await bcrypt.genSalt(10);
-  const hpswd = await bcrypt.hash(password, salt);
+// const registerUser = async (req, res) => {
+//   const { username, password } = req.body;
+//   if (!username || !password) {
+//     res.status(400).json({ message: "Invalid credentials" });
+//   }
+//   const salt = await bcrypt.genSalt(10);
+//   const hpswd = await bcrypt.hash(password, salt);
 
-  const user = await User.create({
-    username,
-    password: hpswd,
-  });
-  if (user) {
-    res.status(200).json({ message: "Registered successfully" });
-  }
-};
+//   const user = await User.create({
+//     username,
+//     password: hpswd,
+//   });
+//   if (user) {
+//     res.status(200).json({ message: "Registered successfully" });
+//   }
+// };
 
 const loginUser = async (req, res) => {
   const { username, password } = req.body;
