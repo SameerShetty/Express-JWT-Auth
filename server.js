@@ -1,20 +1,28 @@
 require("dotenv").config();
+require("colors");
 const express = require("express");
 const app = express();
-const BodyParser = require("body-parser");
+const morgan = require("morgan");
 const cors = require("cors");
-const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const port = process.env.PORT || 5000;
 
-app.use(cors());
-app.use(BodyParser.urlencoded({ extended: true }));
+const connectDb = require("./db/db");
+
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors());
+app.use(morgan("dev"));
 
-mongoose.connect(process.env.MONGO_URL);
+app.use("/api/user", require("./routes/userRoutes"));
+app.use("/api/story", require("./routes/storyRoutes"));
 
-app.use("/login", require("./routes/userRoutes"));
-app.use("/components", require("./routes/compRoutes"));
-
-app.listen(port, () =>
-  console.log(`Server is up and running on the port ${port}`)
-);
+connectDb()
+  .then(() => {
+    app.listen(port, () =>
+      console.log(
+        `Server is up and running on the port ${port}`.magenta.underline.bold
+      )
+    );
+  })
+  .catch((err) => console.log(err));

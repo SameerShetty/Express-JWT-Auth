@@ -1,7 +1,7 @@
-const JWT = require("jsonwebtoken");
-const User = require("../model/userModel");
+const jwt = require("jsonwebtoken");
+const User = require("../models/userModel");
 
-const proctect = async (req, res, next) => {
+const protect = async (req, res, next) => {
   let token;
   if (
     req.headers.authorization &&
@@ -9,18 +9,17 @@ const proctect = async (req, res, next) => {
   ) {
     try {
       token = req.headers.authorization.split(" ")[1];
-      const decoded = JWT.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.SECRET);
       req.user = await User.findById(decoded.id).select("-password");
+
       next();
     } catch (error) {
-      res.status(401);
+      console.log(error);
+      res.status(401).json({ message: "Unauthorized !!!" });
     }
-  }
-  if (!token) {
-    res.status(401);
+  } else {
+    res.status(401).json({ message: "Unauthorized !!!" });
   }
 };
 
-module.exports = {
-  proctect,
-};
+module.exports = protect;
